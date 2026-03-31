@@ -4,22 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.moosic.ui.theme.*
 
 class MainActivity : ComponentActivity() {
 
@@ -27,7 +25,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
+            MoosicTheme {
                 MusicListScreen()
             }
         }
@@ -38,8 +36,10 @@ class MainActivity : ComponentActivity() {
 fun MusicListScreen() {
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
@@ -47,15 +47,16 @@ fun MusicListScreen() {
 
             Text(
                 text = "Moosic - Music App",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = "Popular Music",
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimary
             )
 
             LazyRow(
@@ -66,11 +67,12 @@ fun MusicListScreen() {
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = "All Music",
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
 
@@ -84,7 +86,10 @@ fun MusicListScreen() {
 fun MusicRowItem(music: Music) {
 
     Card(
-        modifier = Modifier.width(150.dp)
+        modifier = Modifier.width(150.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
 
         Column {
@@ -101,12 +106,14 @@ fun MusicRowItem(music: Music) {
 
                 Text(
                     text = music.title,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
 
                 Text(
                     text = music.artist,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
@@ -119,7 +126,10 @@ fun MusicItem(music: Music) {
     var isFavorite by remember { mutableStateOf(false) }
 
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
 
         Column {
@@ -145,7 +155,10 @@ fun MusicItem(music: Music) {
                         else
                             Icons.Outlined.FavoriteBorder,
                         contentDescription = "Favorite",
-                        tint = if (isFavorite) Color.Red else Color.White
+                        tint = if (isFavorite)
+                            FavoriteRed
+                        else
+                            MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -154,20 +167,35 @@ fun MusicItem(music: Music) {
 
                 Text(
                     text = music.title,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
 
-                Text(text = "Artist: ${music.artist}")
-                Text(text = "Mood: ${music.mood}")
+                Text(
+                    text = "Artist: ${music.artist}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+
+                Text(
+                    text = "Mood: ${music.mood}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
                     onClick = { },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
                 ) {
-                    Text("Play Music")
+                    Text(
+                        text = "Play Music",
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 }
             }
         }
@@ -177,7 +205,7 @@ fun MusicItem(music: Music) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMusic() {
-    MaterialTheme {
+    MoosicTheme {
         MusicListScreen()
     }
 }
