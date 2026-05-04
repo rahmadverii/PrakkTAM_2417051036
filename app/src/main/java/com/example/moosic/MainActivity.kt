@@ -3,20 +3,19 @@ package com.example.moosic
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
 import com.example.moosic.ui.theme.*
 import kotlinx.coroutines.delay
 
@@ -106,8 +105,8 @@ fun MusicRowItem(music: Music) {
 
         Column {
 
-            Image(
-                painter = painterResource(id = music.image),
+            AsyncImage(
+                model = music.image,
                 contentDescription = music.title,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -151,8 +150,8 @@ fun MusicItem(
 
             Box {
 
-                Image(
-                    painter = painterResource(id = music.image),
+                AsyncImage(
+                    model = music.image,
                     contentDescription = music.title,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -202,15 +201,9 @@ fun MusicItem(
 
                 Button(
                     onClick = { onDetailClick(music) },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = "Detail",
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
+                    Text("Detail")
                 }
             }
         }
@@ -241,8 +234,8 @@ fun MusicDetailScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Image(
-            painter = painterResource(id = music.image),
+        AsyncImage(
+            model = music.image,
             contentDescription = music.title,
             modifier = Modifier
                 .fillMaxWidth()
@@ -251,50 +244,28 @@ fun MusicDetailScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = "Title: ${music.title}",
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-
-        Text(
-            text = "Artist: ${music.artist}",
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-
-        Text(
-            text = "Mood: ${music.mood}",
-            color = MaterialTheme.colorScheme.onPrimary
-        )
+        Text("Title: ${music.title}")
+        Text("Artist: ${music.artist}")
+        Text("Mood: ${music.mood}")
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = { isLoading = true },
             enabled = !isLoading && !isAdded,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            )
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = if (isAdded) "Added ✓" else "Add to Playlist",
-                color = MaterialTheme.colorScheme.onPrimary
-            )
+            Text(if (isAdded) "Added ✓" else "Add to Playlist")
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
         if (isLoading) {
-            CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary
-            )
+            CircularProgressIndicator()
         }
 
         if (isAdded) {
-            Text(
-                text = "Berhasil ditambahkan ke playlist",
-                color = MaterialTheme.colorScheme.primary
-            )
+            Text("Berhasil ditambahkan ke playlist")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
