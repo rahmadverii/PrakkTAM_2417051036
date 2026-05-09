@@ -18,6 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import com.example.moosic.ui.theme.*
 import kotlinx.coroutines.delay
+import androidx.compose.ui.graphics.Color
+import com.example.moosic.data.MusicData
+import com.example.moosic.data.model.Music
+import com.example.moosic.data.repository.MusicRepository
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,63 +37,33 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MusicListScreen() {
 
+    val repository = MusicRepository()
+    var musicList by remember { mutableStateOf<List<Music>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        musicList = repository.getMusic()
+    }
+
     var selectedMusic by remember { mutableStateOf<Music?>(null) }
 
     if (selectedMusic == null) {
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        LazyColumn {
 
             item {
-
-                Text(
-                    text = "Moosic - Music App",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "Popular Music",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(MusicData.musicList) { music ->
+                LazyRow {
+                    items(musicList) { music ->
                         MusicRowItem(music)
                     }
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "All Music",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
             }
 
-            items(MusicData.musicList) { music ->
+            items(musicList) { music ->
                 MusicItem(music) {
                     selectedMusic = it
                 }
             }
         }
-
-    } else {
-        MusicDetailScreen(
-            music = selectedMusic!!,
-            onBack = { selectedMusic = null }
-        )
     }
 }
 
@@ -244,9 +218,20 @@ fun MusicDetailScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Title: ${music.title}")
-        Text("Artist: ${music.artist}")
-        Text("Mood: ${music.mood}")
+        Text(
+            text = "Title: ${music.title}",
+            color = Color.White
+        )
+
+        Text(
+            text = "Artist: ${music.artist}",
+            color = Color.White
+        )
+
+        Text(
+            text = "Mood: ${music.mood}",
+            color = Color.White
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

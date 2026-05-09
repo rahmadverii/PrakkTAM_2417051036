@@ -1,4 +1,4 @@
-package com.example.moosic
+package com.example.moosic.data.model
 
 data class Music(
     val title: String,
